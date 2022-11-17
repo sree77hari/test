@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Template
 labels:
-  template: openshift-test
+  template: ${APPLICATION_NAME}
 metadata:
-  name: openshift-test
+  name: ${APPLICATION_NAME}
 objects:
 - apiVersion: v1
   kind: ImageStream
@@ -52,15 +52,13 @@ objects:
       git:
         ref: ${SOURCE_REF}
         uri: ${SOURCE_URL}
+      contextDir: /
       type: Git
     strategy:
-      sourceStrategy:
-        forcePull: true
-        from:
-          kind: ImageStreamTag
-          name: default-route-openshift-image-registry.apps.cluster-gbtvh.sandbox942.opentlc.com/openshift/tasks-app:latest
-          namespace: openshift
-      type: Source
+      type: Docker
+      dockerStrategy:
+        dockerfilePath: Dockerfile
+    postCommit: {}
     triggers:
     - github:
         secret: kJZLvfQr3hZg
